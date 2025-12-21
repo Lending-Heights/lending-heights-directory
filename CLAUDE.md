@@ -1,148 +1,134 @@
-# Lending Heights Mortgage - Project Documentation
+# Lending Heights Team Directory - Project Documentation
 
-## Project Overview
+## Current Status (Updated: December 20, 2024)
 
-This is the Lending Heights Mortgage website/application. Lending Heights is a mortgage company with the mission to "create the best place for great loan officers to work."
+### Deployment Status: LIVE
+- **GitHub:** https://github.com/Lending-Heights/lending-heights-directory (Public)
+- **Vercel:** Auto-deploys from `main` branch
+- **Supabase:** Connected and working
+- **Build:** Passing (TypeScript errors resolved)
 
-**Current Priority**: Resolving Vercel deployment issues and getting the site successfully deployed.
+### What's Complete
+- Directory page with search, filters, view toggle (gallery/table)
+- Profile pages for each teammate
+- Create teammate functionality (modal form)
+- CSV export
+- Supabase database integration
+- Responsive design
+- Vercel deployment pipeline
+
+### What's Remaining
+
+**HIGH PRIORITY (Core Features):**
+1. **Connect Edit Functionality** - Button exists on profile page, not wired up
+   - Location: `app/teammate/[id]/page.tsx`
+   - Need: Open modal with pre-filled data, call `updateTeammate()`
+
+2. **Add Delete Functionality** - Not implemented
+   - Location: Profile page sidebar
+   - Need: Delete button, confirmation dialog, `deleteTeammate()` call
+
+3. **Add DELETE RLS Policy** - Required for delete to work
+   - Location: Supabase Dashboard > Authentication > Policies
+   - SQL: `CREATE POLICY "Allow public delete" ON teammates FOR DELETE TO public USING (true);`
+
+**MEDIUM PRIORITY (Enhancements):**
+- Image upload for headshots (currently URL-only)
+- Comprehensive testing across browsers/devices
+
+**LOW PRIORITY (Future):**
+- Microsoft Entra ID authentication
+- Tag management interface
+- License management interface
+- Bulk CSV import
+- Org chart view
+- Analytics dashboard
+
+---
+
+## Deployment Info
+
+### Environment Variables (Vercel)
+```
+NEXT_PUBLIC_SUPABASE_URL=https://ppywhyoxuiucwsgiyqzx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBweXdoeW94dWl1Y3dzZ2l5cXp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5MDg3NTMsImV4cCI6MjA4MTQ4NDc1M30.Kv3HN-0aL5fLRaZq1nFVA6xPT4dTQ_0suadVx4SqxTQ
+```
+
+### Git Info
+- **User:** Vinny Naccarelli (vnaccarelli@lhloans.com)
+- **Org:** Lending-Heights
+
+---
+
+## Key Files Reference
+
+| File | Purpose |
+|------|---------|
+| `app/page.tsx` | Main directory page (search, filters, gallery/table) |
+| `app/teammate/[id]/page.tsx` | Profile page (needs Edit/Delete wiring) |
+| `lib/api/teammates.ts` | All Supabase CRUD operations |
+| `lib/supabase.ts` | Supabase client initialization |
+| `components/TeammateModal.tsx` | Create/Edit modal component |
+| `components/TeammateCard.tsx` | Card component for gallery view |
+| `components/TeammateTable.tsx` | Table component for table view |
+| `types/database.ts` | Supabase database types |
+| `types/index.ts` | Frontend TypeScript types |
+
+---
 
 ## Brand Identity
 
 ### Colors
-- **Primary Blue**: `#0058A9` - Main brand color
-- **Red**: `#FF2260` - Accent color
-- **Yellow**: `#E2C20A` - Secondary accent
+- **Primary Blue:** `#0058A9` - Main brand color
+- **Red:** `#FF2260` - Accent color
+- **Yellow:** `#E2C20A` - Secondary accent
 
 ### Typography
-- **Font Family**: Poppins (all weights)
-- Use Poppins throughout the application for consistency
+- **Font Family:** Poppins (all weights)
 
 ### Brand Values
 - Excellence in service
 - Support for loan officers
 - Professional, trustworthy, modern
 
+---
+
 ## Technology Stack
 
-### Core Technologies
-- **Framework**: Next.js (latest stable version preferred)
-- **UI Library**: React with TypeScript
-- **Styling**: Tailwind CSS
-- **Deployment**: Vercel
-
-### Code Conventions
-- Use TypeScript for type safety
-- Functional components with hooks (no class components)
-- Follow React best practices
-- Use Tailwind utility classes for styling
-- Prefer modern ES6+ syntax
-
-## Vercel Deployment Troubleshooting
-
-### Common Issues to Check
-
-1. **Build Configuration**
-   - Verify `package.json` has correct build scripts
-   - Check for build command: `"build": "next build"`
-   - Ensure all dependencies are in `dependencies` (not just `devDependencies`)
-
-2. **Environment Variables**
-   - Check if any required environment variables are missing in Vercel dashboard
-   - Verify `.env.local` variables are properly configured in Vercel project settings
-
-3. **Node Version**
-   - Ensure `package.json` specifies compatible Node.js version in `engines` field
-   - Vercel default Node version may conflict with local development
-
-4. **Import/Export Issues**
-   - Check for incorrect imports (case sensitivity matters in production)
-   - Look for circular dependencies
-   - Verify all imported files exist with correct paths
-
-5. **Next.js Configuration**
-   - Review `next.config.js` for any local-only configurations
-   - Check image optimization settings
-   - Verify API routes are properly configured
-
-6. **TypeScript Errors**
-   - Production builds are stricter - all TypeScript errors must be resolved
-   - Check `tsconfig.json` settings
-   - Run `npm run build` locally to catch errors before deployment
-
-7. **Dependencies**
-   - Look for missing packages in `package.json`
-   - Check for version conflicts
-   - Ensure `package-lock.json` or `yarn.lock` is committed
-
-8. **File Size/Optimization**
-   - Check for overly large dependencies causing build timeouts
-   - Look for unoptimized images or assets
-   - Verify bundle size isn't exceeding limits
-
-### Debugging Workflow
-
-When helping debug Vercel deployment issues:
-
-1. First, ask to see the **Vercel build logs** - this is the most important diagnostic tool
-2. Check the **Vercel dashboard** for specific error messages
-3. Reproduce the build locally: `npm run build`
-4. Review recent changes that might have broken deployment
-5. Check Vercel project settings for misconfigurations
-
-## Development Guidelines
-
-### When Making Changes
-- Test locally with `npm run dev` before committing
-- Run `npm run build` to verify production build works
-- Check TypeScript compilation: `npx tsc --noEmit`
-- Ensure code follows existing patterns in the codebase
-
-### File Organization
-- Components should be modular and reusable
-- Keep Lending Heights brand colors and Poppins font consistent
-- Use meaningful, descriptive names for files and components
-
-### Styling Guidelines
-- Use Tailwind utility classes
-- Apply brand colors using Tailwind config or inline hex values
-- Ensure responsive design (mobile-first approach)
-- Maintain consistent spacing and typography
-
-## Git Workflow
-- Create descriptive commit messages
-- Test builds before pushing
-- Document any configuration changes
-- Keep environment-specific configs out of version control
-
-## Questions to Ask When Debugging
-
-If Claude Code encounters deployment issues, it should ask:
-
-1. "Can you share the complete Vercel build logs?"
-2. "What error message is Vercel showing?"
-3. "Did the deployment work previously? If so, what changed since then?"
-4. "Are there any environment variables required for the build?"
-5. "What does the local build output show when you run `npm run build`?"
-
-## Success Criteria
-
-A successful deployment means:
-- Build completes without errors on Vercel
-- Site is accessible at the Vercel URL
-- All pages render correctly
-- Brand colors and Poppins font display properly
-- No console errors in production
-- Environment variables are properly configured
-
-## Communication Style
-
-When working with this codebase:
-- Be direct and solution-focused
-- Provide specific, actionable fixes
-- Explain WHY a change will help (not just WHAT to change)
-- Reference Vercel documentation when relevant
-- Suggest running local tests before redeploying
+- **Framework:** Next.js 14 (App Router)
+- **UI:** React 18 with TypeScript
+- **Styling:** Tailwind CSS
+- **Database:** Supabase (PostgreSQL)
+- **Deployment:** Vercel
+- **Icons:** Lucide React
 
 ---
 
-**Note to Claude Code**: Vinny is experienced with React, Next.js, and web development. You can use technical terminology and provide detailed explanations. Focus on solving the Vercel deployment issue efficiently.
+## Code Conventions
+
+- TypeScript for type safety
+- Functional components with hooks
+- Tailwind utility classes for styling
+- `@/` path alias for imports
+- Supabase queries wrapped in try/catch with error handling
+
+---
+
+## Development Commands
+
+```bash
+npm run dev      # Start dev server
+npm run build    # Production build
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
+
+---
+
+## Notes for Claude
+
+- Build locally with `npm run build` before pushing to catch errors
+- TypeScript strict mode is OFF (`tsconfig.json`) - some Supabase types use `as any`
+- The `updateTeammate()` and `deleteTeammate()` functions exist in `lib/api/teammates.ts`
+- Vercel auto-deploys on push to `main`
+- User is experienced with React/Next.js - use technical language
