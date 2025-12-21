@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { fetchTeammateById, updateTeammate } from '@/lib/api/teammates';
+import { fetchTeammateById, updateTeammate, deleteTeammate } from '@/lib/api/teammates';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { ProfileInfo } from '@/components/profile/ProfileInfo';
 import { ProfileContact } from '@/components/profile/ProfileContact';
 import { ProfileTags } from '@/components/profile/ProfileTags';
 import { ProfileLicenses } from '@/components/profile/ProfileLicenses';
 import { TeammateModal } from '@/components/TeammateModal';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Loader2, Trash2 } from 'lucide-react';
 
 export default function TeammatePage() {
   const params = useParams();
@@ -19,6 +19,8 @@ export default function TeammatePage() {
   const [error, setError] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -102,6 +104,24 @@ export default function TeammatePage() {
     if (data) {
       setTeammate(data);
     }
+  }
+
+  // Handle delete
+  async function handleDelete() {
+    if (!teammate?.id) return;
+
+    setDeleting(true);
+    const { error } = await deleteTeammate(teammate.id);
+    setDeleting(false);
+
+    if (error) {
+      alert('Error deleting teammate: ' + error);
+      setShowDeleteConfirm(false);
+      return;
+    }
+
+    // Success - redirect to directory
+    router.push('/');
   }
 
   // Loading State
@@ -194,6 +214,15 @@ export default function TeammatePage() {
                 >
                   <span className="text-xl">✏️</span>
                   Edit Profile
+                </button>
+
+                {/* Delete Button */}
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="w-full px-6 py-3 bg-lh-red/10 text-lh-red border border-lh-red/20 font-poppins font-semibold rounded-lg hover:bg-lh-red hover:text-white transition-colors shadow-md flex items-center justify-center gap-2"
+                >
+                  <Trash2 className="w-5 h-5" />
+                  Delete Profile
                 </button>
 
                 <ProfileContact teammate={teammate} />
@@ -444,6 +473,66 @@ export default function TeammatePage() {
           </div>
         </form>
       </TeammateModal>
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-[200] overflow-y-auto">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowDeleteConfirm(false)}
+          ></div>
+
+          {/* Dialog */}
+          <div className="flex min-h-full items-center justify-center p-4">
+            <div
+              className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md animate-fade-in p-8"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Warning Icon */}
+              <div className="w-16 h-16 bg-lh-red/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Trash2 className="w-8 h-8 text-lh-red" />
+              </div>
+
+              <h2 className="text-2xl font-bold font-poppins text-lh-text text-center mb-4">
+                Delete Teammate?
+              </h2>
+
+              <p className="text-lh-secondary-text font-poppins text-center mb-8">
+                Are you sure you want to delete <span className="font-semibold text-lh-text">{teammate?.full_name}</span>?
+                This action cannot be undone.
+              </p>
+
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={deleting}
+                  className="flex-1 px-6 py-3 border border-lh-border text-lh-text font-poppins font-semibold rounded-lg hover:bg-lh-bg transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="flex-1 px-6 py-3 bg-lh-red text-white font-poppins font-semibold rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {deleting ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-5 h-5" />
+                      Delete
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
