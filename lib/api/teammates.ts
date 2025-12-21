@@ -258,19 +258,19 @@ export async function removeTeammateTag(teammateId: string, tagName: string) {
 export async function getTeammateStats() {
   try {
     // Count by department
-    const { data: deptCounts, error: deptError } = await supabase
-      .from('teammates')
+    const { data: deptCounts, error: deptError } = await (supabase
+      .from('teammates') as any)
       .select('department')
       .not('onboarding_status', 'eq', 'Offboard');
 
     // Count by status
-    const { data: statusCounts, error: statusError } = await supabase
-      .from('teammates')
+    const { data: statusCounts, error: statusError } = await (supabase
+      .from('teammates') as any)
       .select('onboarding_status');
 
     // Count by branch
-    const { data: branchCounts, error: branchError } = await supabase
-      .from('teammates')
+    const { data: branchCounts, error: branchError } = await (supabase
+      .from('teammates') as any)
       .select('branch')
       .not('onboarding_status', 'eq', 'Offboard');
 
