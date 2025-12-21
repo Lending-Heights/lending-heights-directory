@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { fetchTeammateById } from '@/lib/api/teammates';
+import { fetchTeammateById, updateTeammate } from '@/lib/api/teammates';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { ProfileInfo } from '@/components/profile/ProfileInfo';
 import { ProfileContact } from '@/components/profile/ProfileContact';
 import { ProfileTags } from '@/components/profile/ProfileTags';
 import { ProfileLicenses } from '@/components/profile/ProfileLicenses';
+import { TeammateModal } from '@/components/TeammateModal';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 
 export default function TeammatePage() {
@@ -16,6 +17,21 @@ export default function TeammatePage() {
   const [teammate, setTeammate] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    position: '',
+    department: '',
+    branch: '',
+    nmls: '',
+    onboarding_status: '',
+    linkedin_url: '',
+    calendly_link: '',
+  });
 
   useEffect(() => {
     async function loadTeammate() {
@@ -44,6 +60,49 @@ export default function TeammatePage() {
 
     loadTeammate();
   }, [params.id]);
+
+  // Open edit modal and populate form with current data
+  function openEditModal() {
+    if (!teammate) return;
+    setFormData({
+      first_name: teammate.first_name || '',
+      last_name: teammate.last_name || '',
+      email: teammate.email || '',
+      phone: teammate.phone || '',
+      position: teammate.position || '',
+      department: teammate.department || '',
+      branch: teammate.branch || '',
+      nmls: teammate.nmls || '',
+      onboarding_status: teammate.onboarding_status || 'Not started',
+      linkedin_url: teammate.linkedin_url || '',
+      calendly_link: teammate.calendly_link || '',
+    });
+    setIsEditModalOpen(true);
+  }
+
+  // Handle form submission
+  async function handleEditSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!teammate?.id) return;
+
+    setSaving(true);
+    const { error } = await updateTeammate(teammate.id, formData as any);
+    setSaving(false);
+
+    if (error) {
+      alert('Error updating teammate: ' + error);
+      return;
+    }
+
+    // Success - close modal and reload data
+    setIsEditModalOpen(false);
+
+    // Reload teammate data
+    const { data } = await fetchTeammateById(teammate.id);
+    if (data) {
+      setTeammate(data);
+    }
+  }
 
   // Loading State
   if (loading) {
@@ -130,7 +189,7 @@ export default function TeammatePage() {
               <div className="lg:col-span-1 space-y-6">
                 {/* Edit Button */}
                 <button
-                  onClick={() => alert('Edit button clicked! (Not connected yet)')}
+                  onClick={openEditModal}
                   className="w-full px-6 py-3 bg-lh-yellow text-lh-text font-poppins font-semibold rounded-lg hover:bg-yellow-500 transition-colors shadow-md flex items-center justify-center gap-2"
                 >
                   <span className="text-xl">✏️</span>
@@ -181,6 +240,210 @@ export default function TeammatePage() {
           </div>
         )}
       </div>
+
+      {/* Edit Modal */}
+      <TeammateModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        title="Edit Teammate"
+      >
+        <form onSubmit={handleEditSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* First Name */}
+            <div>
+              <label className="block text-sm font-semibold text-lh-text font-poppins mb-2">
+                First Name *
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.first_name}
+                onChange={(e) => setFormData({...formData, first_name: e.target.value})}
+                className="w-full px-4 py-3 border border-lh-border rounded-lg font-poppins focus:outline-none focus:ring-2 focus:ring-lh-blue"
+              />
+            </div>
+
+            {/* Last Name */}
+            <div>
+              <label className="block text-sm font-semibold text-lh-text font-poppins mb-2">
+                Last Name *
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.last_name}
+                onChange={(e) => setFormData({...formData, last_name: e.target.value})}
+                className="w-full px-4 py-3 border border-lh-border rounded-lg font-poppins focus:outline-none focus:ring-2 focus:ring-lh-blue"
+              />
+            </div>
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-semibold text-lh-text font-poppins mb-2">
+              Email *
+            </label>
+            <input
+              type="email"
+              required
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              className="w-full px-4 py-3 border border-lh-border rounded-lg font-poppins focus:outline-none focus:ring-2 focus:ring-lh-blue"
+            />
+          </div>
+
+          {/* Phone */}
+          <div>
+            <label className="block text-sm font-semibold text-lh-text font-poppins mb-2">
+              Phone
+            </label>
+            <input
+              type="tel"
+              value={formData.phone}
+              onChange={(e) => setFormData({...formData, phone: e.target.value})}
+              className="w-full px-4 py-3 border border-lh-border rounded-lg font-poppins focus:outline-none focus:ring-2 focus:ring-lh-blue"
+            />
+          </div>
+
+          {/* Position */}
+          <div>
+            <label className="block text-sm font-semibold text-lh-text font-poppins mb-2">
+              Position *
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.position}
+              onChange={(e) => setFormData({...formData, position: e.target.value})}
+              className="w-full px-4 py-3 border border-lh-border rounded-lg font-poppins focus:outline-none focus:ring-2 focus:ring-lh-blue"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Department */}
+            <div>
+              <label className="block text-sm font-semibold text-lh-text font-poppins mb-2">
+                Department *
+              </label>
+              <select
+                required
+                value={formData.department}
+                onChange={(e) => setFormData({...formData, department: e.target.value})}
+                className="w-full px-4 py-3 border border-lh-border rounded-lg font-poppins focus:outline-none focus:ring-2 focus:ring-lh-blue"
+              >
+                <option value="">Select Department</option>
+                <option value="Leadership">Leadership</option>
+                <option value="Sales">Sales</option>
+                <option value="Operations">Operations</option>
+              </select>
+            </div>
+
+            {/* Branch */}
+            <div>
+              <label className="block text-sm font-semibold text-lh-text font-poppins mb-2">
+                Branch *
+              </label>
+              <select
+                required
+                value={formData.branch}
+                onChange={(e) => setFormData({...formData, branch: e.target.value})}
+                className="w-full px-4 py-3 border border-lh-border rounded-lg font-poppins focus:outline-none focus:ring-2 focus:ring-lh-blue"
+              >
+                <option value="">Select Branch</option>
+                <option value="🌉 Pittsburgh (HQ)">🌉 Pittsburgh (HQ)</option>
+                <option value="🍑 Savannah">🍑 Savannah</option>
+                <option value="🔔 Philadelphia">🔔 Philadelphia</option>
+                <option value="🌊 Erie PA">🌊 Erie PA</option>
+                <option value="🌅 LH California">🌅 LH California</option>
+              </select>
+            </div>
+          </div>
+
+          {/* NMLS */}
+          <div>
+            <label className="block text-sm font-semibold text-lh-text font-poppins mb-2">
+              NMLS Number
+            </label>
+            <input
+              type="text"
+              value={formData.nmls}
+              onChange={(e) => setFormData({...formData, nmls: e.target.value})}
+              className="w-full px-4 py-3 border border-lh-border rounded-lg font-poppins focus:outline-none focus:ring-2 focus:ring-lh-blue"
+              placeholder="NMLS #123456"
+            />
+          </div>
+
+          {/* Onboarding Status */}
+          <div>
+            <label className="block text-sm font-semibold text-lh-text font-poppins mb-2">
+              Onboarding Status
+            </label>
+            <select
+              value={formData.onboarding_status}
+              onChange={(e) => setFormData({...formData, onboarding_status: e.target.value})}
+              className="w-full px-4 py-3 border border-lh-border rounded-lg font-poppins focus:outline-none focus:ring-2 focus:ring-lh-blue"
+            >
+              <option value="Not started">Not started</option>
+              <option value="In progress">In progress</option>
+              <option value="Done">Done</option>
+              <option value="Offboard">Offboard</option>
+            </select>
+          </div>
+
+          {/* LinkedIn */}
+          <div>
+            <label className="block text-sm font-semibold text-lh-text font-poppins mb-2">
+              LinkedIn URL
+            </label>
+            <input
+              type="url"
+              value={formData.linkedin_url}
+              onChange={(e) => setFormData({...formData, linkedin_url: e.target.value})}
+              className="w-full px-4 py-3 border border-lh-border rounded-lg font-poppins focus:outline-none focus:ring-2 focus:ring-lh-blue"
+              placeholder="https://linkedin.com/in/..."
+            />
+          </div>
+
+          {/* Calendly */}
+          <div>
+            <label className="block text-sm font-semibold text-lh-text font-poppins mb-2">
+              Calendly Link
+            </label>
+            <input
+              type="url"
+              value={formData.calendly_link}
+              onChange={(e) => setFormData({...formData, calendly_link: e.target.value})}
+              className="w-full px-4 py-3 border border-lh-border rounded-lg font-poppins focus:outline-none focus:ring-2 focus:ring-lh-blue"
+              placeholder="https://calendly.com/..."
+            />
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={() => setIsEditModalOpen(false)}
+              className="flex-1 px-6 py-3 border border-lh-border text-lh-text font-poppins font-semibold rounded-lg hover:bg-lh-bg transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="flex-1 px-6 py-3 bg-lh-blue text-white font-poppins font-semibold rounded-lg hover:bg-lh-dark-blue transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                'Save Changes'
+              )}
+            </button>
+          </div>
+        </form>
+      </TeammateModal>
     </div>
   );
 }
