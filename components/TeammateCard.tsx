@@ -42,7 +42,7 @@ export function TeammateCard({ teammate, index }: TeammateCardProps) {
 
       {/* Profile Photo */}
       <div className="relative px-6 -mt-16 mb-4">
-        <Link href={`/teammate/${teammate.id}`} className="block w-24 h-24 mx-auto">
+        <Link href={`/directory/${teammate.id}`} className="block w-24 h-24 mx-auto">
           <div className="w-24 h-24 rounded-full overflow-hidden bg-white ring-4 ring-white shadow-xl cursor-pointer">
             {teammate.headshotUrl ? (
               <img
@@ -64,7 +64,7 @@ export function TeammateCard({ teammate, index }: TeammateCardProps) {
       {/* Content */}
       <div className="px-6 pb-6">
         {/* Name & Position - Clickable to Profile */}
-        <Link href={`/teammate/${teammate.id}`} className="block mb-4 group/link cursor-pointer">
+        <Link href={`/directory/${teammate.id}`} className="block mb-4 group/link cursor-pointer">
           <h3 className="text-xl font-bold font-poppins text-lh-text text-center mb-1 group-hover/link:text-lh-blue transition-colors">
             {teammate.fullName}
           </h3>
@@ -152,7 +152,7 @@ export function TeammateCard({ teammate, index }: TeammateCardProps) {
 
           {/* View Profile Button */}
           <Link
-            href={`/teammate/${teammate.id}`}
+            href={`/directory/${teammate.id}`}
             className="ml-auto p-2 text-lh-blue hover:bg-lh-blue hover:text-white rounded-lg transition-all group/btn"
             title="View Profile"
           >
