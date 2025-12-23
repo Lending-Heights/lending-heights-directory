@@ -320,6 +320,49 @@ export interface Database {
           notes?: string | null
         }
       }
+      calendar_events: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          event_date: string
+          start_time: string | null
+          end_time: string | null
+          event_type: 'meeting' | 'payroll' | 'holiday' | 'event' | 'training' | 'deadline'
+          location: string | null
+          is_all_day: boolean
+          created_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          event_date: string
+          start_time?: string | null
+          end_time?: string | null
+          event_type?: 'meeting' | 'payroll' | 'holiday' | 'event' | 'training' | 'deadline'
+          location?: string | null
+          is_all_day?: boolean
+          created_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          event_date?: string
+          start_time?: string | null
+          end_time?: string | null
+          event_type?: 'meeting' | 'payroll' | 'holiday' | 'event' | 'training' | 'deadline'
+          location?: string | null
+          is_all_day?: boolean
+          created_by?: string | null
+          updated_at?: string
+        }
+      }
     }
     Views: {
       teammates_with_manager_info: {
