@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-poppins;
+  }
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 220 13% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 12%;
+    --primary: 207 100% 33%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 207 100% 33%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 345 100% 57%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 345 100% 57%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 207 100% 33%;
+    --chart-1: 207 100% 33%;
+    --chart-2: 345 100% 57%;
+    --chart-3: 49 89% 46%;
+    --chart-4: 199 100% 50%;
+    --chart-5: 212 100% 14%;
+    --radius: 0.5rem;
+
+    /* Sidebar dimensions */
+    --sidebar-width: 256px;
+    --sidebar-collapsed-width: 64px;
+  }
+  .dark {
+    --background: 212 100% 8%;
+    --foreground: 0 0% 98%;
+    --card: 212 80% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 212 80% 12%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 207 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 212 50% 20%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 212 50% 20%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 345 100% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 345 100% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 212 50% 25%;
+    --input: 212 50% 25%;
+    --ring: 207 100% 50%;
+    --chart-1: 207 100% 50%;
+    --chart-2: 345 100% 60%;
+    --chart-3: 49 89% 55%;
+    --chart-4: 199 100% 60%;
+    --chart-5: 212 100% 40%;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

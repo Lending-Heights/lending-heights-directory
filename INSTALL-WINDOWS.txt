@@ -1,0 +1,137 @@
+===============================================================================
+  LENDING HEIGHTS TEAM DIRECTORY - INSTALLATION GUIDE (WINDOWS)
+===============================================================================
+
+🎉 Welcome! Let's get your Team Directory running in 3 easy steps!
+
+===============================================================================
+STEP 1: EXTRACT THE ZIP FILE
+===============================================================================
+
+1. Right-click the ZIP file
+2. Select "Extract All..."
+3. Choose a location (e.g., Documents\Projects\)
+4. Click "Extract"
+
+You should now have a folder called "teammate-directory-complete"
+
+===============================================================================
+STEP 2: OPEN IN VS CODE
+===============================================================================
+
+1. Open Visual Studio Code
+2. Click "File" → "Open Folder"
+3. Navigate to and select "teammate-directory-complete"
+4. Click "Select Folder"
+
+===============================================================================
+STEP 3: INSTALL & RUN
+===============================================================================
+
+1. Open the integrated terminal in VS Code:
+   - Click "Terminal" → "New Terminal"
+   - OR press Ctrl + ` (backtick key)
+
+2. Install dependencies (first time only):
+   
+   npm install
+   
+   This will take 1-2 minutes. Wait for it to complete.
+
+3. Start the development server:
+   
+   npm run dev
+   
+4. Open your browser and go to:
+   
+   http://localhost:3000
+   
+   🎉 You should see your beautiful Team Directory!
+
+===============================================================================
+TROUBLESHOOTING
+===============================================================================
+
+❌ "npm is not recognized"
+   → You need to install Node.js first:
+   → Go to https://nodejs.org
+   → Download the LTS version (left button)
+   → Install it and restart VS Code
+
+❌ Port 3000 already in use
+   → Try: npm run dev -- -p 3001
+   → Then open: http://localhost:3001
+
+❌ Build errors about missing modules
+   → Delete node_modules folder
+   → Delete package-lock.json
+   → Run: npm install
+   → Run: npm run dev
+
+===============================================================================
+CUSTOMIZING YOUR DATA
+===============================================================================
+
+To add your real team members:
+
+1. Open: data/teammates.ts
+2. Replace the sample data with your team's info
+3. Save the file
+4. The page will automatically refresh!
+
+Sample teammate format:
+{
+  id: '13',
+  firstName: 'Your',
+  lastName: 'Name',
+  fullName: 'Your Name',
+  email: 'yourname@lendingheights.com',
+  phone: '(412) 555-XXXX',
+  position: 'Loan Officer',
+  department: 'Sales',
+  branch: '🌉 Pittsburgh (HQ)',
+  headshotUrl: 'https://...',  // or leave blank
+  startDate: '2024-01-15',
+  onboardingStatus: 'Done',
+  tags: ['sales']
+}
+
+===============================================================================
+KEYBOARD SHORTCUTS
+===============================================================================
+
+Ctrl + C         → Stop the development server
+Ctrl + `         → Open/close terminal
+Ctrl + P         → Quick file search
+Ctrl + Shift + P → Command palette
+
+===============================================================================
+NEXT STEPS
+===============================================================================
+
+Once you have this running, you can:
+✅ Customize the sample data with your real team
+✅ Add team member headshots
+✅ Adjust colors in tailwind.config.js
+✅ Move on to building the Table View (Step 2)
+✅ Create the database integration (Supabase)
+✅ Add profile pages
+✅ Build add/edit forms
+
+===============================================================================
+NEED HELP?
+===============================================================================
+
+If you run into issues:
+1. Check that Node.js is installed: node --version
+2. Make sure you're in the right folder: pwd or cd
+3. Try deleting node_modules and reinstalling
+4. Check the terminal for specific error messages
+
+===============================================================================
+
+🎯 YOU + LH = ACCOMPLISH
+
+Built with ❤️ for Lending Heights Mortgage
+
+===============================================================================
