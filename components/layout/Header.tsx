@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useAuthStore, useSidebarStore, type UserRole } from '@/lib/store';
 import { MobileSidebar } from './Sidebar';
+import { ThemeToggle } from './ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -220,6 +221,9 @@ export function Header() {
         </span>
         <span className="sr-only">Notifications</span>
       </Button>
+
+      {/* Theme Toggle */}
+      <ThemeToggle />
 
       {/* User Menu */}
       <UserMenu />

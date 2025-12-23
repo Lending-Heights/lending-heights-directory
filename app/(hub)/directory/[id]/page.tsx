@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { fetchTeammateById, updateTeammate, deleteTeammate } from '@/lib/api/teammates';
+import { uploadHeadshot } from '@/lib/api/storage';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { ProfileInfo } from '@/components/profile/ProfileInfo';
 import { ProfileContact } from '@/components/profile/ProfileContact';
@@ -12,7 +13,7 @@ import { ProfileLicenses } from '@/components/profile/ProfileLicenses';
 import { TeammateModal } from '@/components/TeammateModal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Loader2, Trash2, Edit, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Loader2, Trash2, Edit, AlertTriangle, Upload, X } from 'lucide-react';
 
 export default function TeammatePage() {
   const params = useParams();
@@ -37,6 +38,8 @@ export default function TeammatePage() {
     linkedin_url: '',
     calendly_link: '',
   });
+  const [headshotFile, setHeadshotFile] = useState<File | null>(null);
+  const [headshotPreview, setHeadshotPreview] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadTeammate() {
@@ -81,7 +84,27 @@ export default function TeammatePage() {
       linkedin_url: teammate.linkedin_url || '',
       calendly_link: teammate.calendly_link || '',
     });
+    // Set current headshot as preview if exists
+    setHeadshotPreview(teammate.headshot_url || null);
+    setHeadshotFile(null);
     setIsEditModalOpen(true);
+  }
+
+  function handleHeadshotChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setHeadshotFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setHeadshotPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function clearHeadshot() {
+    setHeadshotFile(null);
+    setHeadshotPreview(null);
   }
 
   async function handleEditSubmit(e: React.FormEvent) {
@@ -89,7 +112,29 @@ export default function TeammatePage() {
     if (!teammate?.id) return;
 
     setSaving(true);
-    const { error } = await updateTeammate(teammate.id, formData as any);
+
+    let headshotUrl: string | null | undefined = undefined;
+
+    // Upload new headshot if a file was selected
+    if (headshotFile) {
+      const { url, error: uploadError } = await uploadHeadshot(headshotFile, teammate.id);
+      if (uploadError) {
+        alert('Error uploading headshot: ' + uploadError);
+        setSaving(false);
+        return;
+      }
+      headshotUrl = url;
+    } else if (headshotPreview === null && teammate.headshot_url) {
+      // User cleared the headshot
+      headshotUrl = null;
+    }
+
+    const updateData: any = { ...formData };
+    if (headshotUrl !== undefined) {
+      updateData.headshot_url = headshotUrl;
+    }
+
+    const { error } = await updateTeammate(teammate.id, updateData);
     setSaving(false);
 
     if (error) {
@@ -98,6 +143,8 @@ export default function TeammatePage() {
     }
 
     setIsEditModalOpen(false);
+    setHeadshotFile(null);
+    setHeadshotPreview(null);
 
     const { data } = await fetchTeammateById(teammate.id);
     if (data) {
@@ -254,6 +301,50 @@ export default function TeammatePage() {
         title="Edit Teammate"
       >
         <form onSubmit={handleEditSubmit} className="space-y-4">
+          {/* Headshot Upload */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Profile Photo</label>
+            <div className="flex items-center gap-4">
+              {headshotPreview ? (
+                <div className="relative">
+                  <img
+                    src={headshotPreview}
+                    alt="Preview"
+                    className="w-20 h-20 rounded-full object-cover border-2 border-border"
+                  />
+                  <button
+                    type="button"
+                    onClick={clearHeadshot}
+                    className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground rounded-full p-1 hover:bg-destructive/90"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ) : (
+                <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-border">
+                  <Upload className="h-6 w-6 text-muted-foreground" />
+                </div>
+              )}
+              <div className="flex-1">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleHeadshotChange}
+                  className="hidden"
+                  id="edit-headshot-upload"
+                />
+                <label htmlFor="edit-headshot-upload">
+                  <Button type="button" variant="outline" size="sm" asChild>
+                    <span className="cursor-pointer">
+                      {headshotPreview ? 'Change Photo' : 'Upload Photo'}
+                    </span>
+                  </Button>
+                </label>
+                <p className="text-xs text-muted-foreground mt-1">JPG, PNG or GIF. Max 5MB.</p>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">First Name *</label>

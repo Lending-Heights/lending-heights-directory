@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { FilterState, Department } from '@/types';
 import { fetchTeammates, createTeammate } from '@/lib/api/teammates';
+import { uploadHeadshot } from '@/lib/api/storage';
 import { Filters } from '@/components/Filters';
 import { DepartmentGroup } from '@/components/DepartmentGroup';
 import { TeammateTable } from '@/components/TeammateTable';
@@ -12,7 +13,7 @@ import { TeammateModal } from '@/components/TeammateModal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Users, Loader2, Plus, UserCheck, Building2 } from 'lucide-react';
+import { Users, Loader2, Plus, UserCheck, Building2, Upload, X } from 'lucide-react';
 
 type ViewMode = 'gallery' | 'table';
 
@@ -40,6 +41,9 @@ export default function DirectoryPage() {
   const [teammates, setTeammates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [headshotFile, setHeadshotFile] = useState<File | null>(null);
+  const [headshotPreview, setHeadshotPreview] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
   // Fetch teammates from database on mount
   useEffect(() => {
@@ -84,9 +88,41 @@ export default function DirectoryPage() {
     loadTeammates();
   }, []);
 
+  // Handle headshot file selection
+  function handleHeadshotChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setHeadshotFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setHeadshotPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function clearHeadshot() {
+    setHeadshotFile(null);
+    setHeadshotPreview(null);
+  }
+
   // Handle form submission
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setSaving(true);
+
+    let headshotUrl: string | null = null;
+
+    // Upload headshot if selected
+    if (headshotFile) {
+      const { url, error: uploadError } = await uploadHeadshot(headshotFile);
+      if (uploadError) {
+        alert('Error uploading headshot: ' + uploadError);
+        setSaving(false);
+        return;
+      }
+      headshotUrl = url;
+    }
 
     const { data, error } = await createTeammate({
       first_name: formData.firstName,
@@ -98,15 +134,18 @@ export default function DirectoryPage() {
       branch: formData.branch,
       nmls: formData.nmls || null,
       onboarding_status: formData.onboardingStatus as any,
+      headshot_url: headshotUrl,
     });
 
     if (error) {
       alert('Error creating teammate: ' + error);
+      setSaving(false);
       return;
     }
 
     alert('Teammate created successfully!');
     setIsModalOpen(false);
+    setSaving(false);
 
     // Reset form
     setFormData({
@@ -120,6 +159,8 @@ export default function DirectoryPage() {
       nmls: '',
       onboardingStatus: 'Not started',
     });
+    setHeadshotFile(null);
+    setHeadshotPreview(null);
 
     // Reload teammates
     const result = await fetchTeammates();
@@ -333,6 +374,50 @@ export default function DirectoryPage() {
         title="Add New Teammate"
       >
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Headshot Upload */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Profile Photo</label>
+            <div className="flex items-center gap-4">
+              {headshotPreview ? (
+                <div className="relative">
+                  <img
+                    src={headshotPreview}
+                    alt="Preview"
+                    className="w-20 h-20 rounded-full object-cover border-2 border-border"
+                  />
+                  <button
+                    type="button"
+                    onClick={clearHeadshot}
+                    className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground rounded-full p-1 hover:bg-destructive/90"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ) : (
+                <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-border">
+                  <Upload className="h-6 w-6 text-muted-foreground" />
+                </div>
+              )}
+              <div className="flex-1">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleHeadshotChange}
+                  className="hidden"
+                  id="headshot-upload"
+                />
+                <label htmlFor="headshot-upload">
+                  <Button type="button" variant="outline" size="sm" asChild>
+                    <span className="cursor-pointer">
+                      {headshotPreview ? 'Change Photo' : 'Upload Photo'}
+                    </span>
+                  </Button>
+                </label>
+                <p className="text-xs text-muted-foreground mt-1">JPG, PNG or GIF. Max 5MB.</p>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">First Name *</label>
@@ -447,11 +532,18 @@ export default function DirectoryPage() {
           </div>
 
           <div className="flex gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} className="flex-1">
+            <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} className="flex-1" disabled={saving}>
               Cancel
             </Button>
-            <Button type="submit" className="flex-1">
-              Save Teammate
+            <Button type="submit" className="flex-1" disabled={saving}>
+              {saving ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                'Save Teammate'
+              )}
             </Button>
           </div>
         </form>
