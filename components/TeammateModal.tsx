@@ -23,7 +23,7 @@ export function TeammateModal({ isOpen, onClose, title, children }: TeammateModa
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div 
-          className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl animate-fade-in"
+          className="relative bg-card rounded-2xl shadow-2xl w-full max-w-2xl animate-fade-in"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}

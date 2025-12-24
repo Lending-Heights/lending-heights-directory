@@ -426,7 +426,7 @@ export default function DirectoryPage() {
                 required
                 value={formData.firstName}
                 onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
             <div>
@@ -436,7 +436,7 @@ export default function DirectoryPage() {
                 required
                 value={formData.lastName}
                 onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
           </div>
@@ -448,7 +448,7 @@ export default function DirectoryPage() {
               required
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
@@ -458,7 +458,7 @@ export default function DirectoryPage() {
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({...formData, phone: e.target.value})}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
@@ -469,7 +469,7 @@ export default function DirectoryPage() {
               required
               value={formData.position}
               onChange={(e) => setFormData({...formData, position: e.target.value})}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
@@ -480,7 +480,7 @@ export default function DirectoryPage() {
                 required
                 value={formData.department}
                 onChange={(e) => setFormData({...formData, department: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">Select</option>
                 <option value="Leadership">Leadership</option>
@@ -494,7 +494,7 @@ export default function DirectoryPage() {
                 required
                 value={formData.branch}
                 onChange={(e) => setFormData({...formData, branch: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">Select</option>
                 <option value="Pittsburgh (HQ)">Pittsburgh (HQ)</option>
@@ -513,7 +513,7 @@ export default function DirectoryPage() {
                 type="text"
                 value={formData.nmls}
                 onChange={(e) => setFormData({...formData, nmls: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
             <div>
@@ -522,7 +522,7 @@ export default function DirectoryPage() {
                 required
                 value={formData.onboardingStatus}
                 onChange={(e) => setFormData({...formData, onboardingStatus: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="Not started">Not started</option>
                 <option value="In progress">In progress</option>

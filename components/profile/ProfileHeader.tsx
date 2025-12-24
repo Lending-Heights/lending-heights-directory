@@ -23,13 +23,13 @@ export function ProfileHeader({ teammate }: ProfileHeaderProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Done':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300';
       case 'In progress':
-        return 'bg-lh-yellow text-lh-text';
+        return 'bg-lh-yellow text-lh-text dark:bg-yellow-900/50 dark:text-yellow-300';
       case 'Not started':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-muted-foreground';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-muted-foreground';
     }
   };
 

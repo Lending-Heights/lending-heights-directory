@@ -353,7 +353,7 @@ export default function TeammatePage() {
                 required
                 value={formData.first_name}
                 onChange={(e) => setFormData({...formData, first_name: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
             <div>
@@ -363,7 +363,7 @@ export default function TeammatePage() {
                 required
                 value={formData.last_name}
                 onChange={(e) => setFormData({...formData, last_name: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
           </div>
@@ -375,7 +375,7 @@ export default function TeammatePage() {
               required
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
@@ -385,7 +385,7 @@ export default function TeammatePage() {
               type="tel"
               value={formData.phone}
               onChange={(e) => setFormData({...formData, phone: e.target.value})}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
@@ -396,7 +396,7 @@ export default function TeammatePage() {
               required
               value={formData.position}
               onChange={(e) => setFormData({...formData, position: e.target.value})}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
@@ -407,7 +407,7 @@ export default function TeammatePage() {
                 required
                 value={formData.department}
                 onChange={(e) => setFormData({...formData, department: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">Select</option>
                 <option value="Leadership">Leadership</option>
@@ -421,7 +421,7 @@ export default function TeammatePage() {
                 required
                 value={formData.branch}
                 onChange={(e) => setFormData({...formData, branch: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">Select</option>
                 <option value="Pittsburgh (HQ)">Pittsburgh (HQ)</option>
@@ -440,7 +440,7 @@ export default function TeammatePage() {
                 type="text"
                 value={formData.nmls}
                 onChange={(e) => setFormData({...formData, nmls: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
             <div>
@@ -448,7 +448,7 @@ export default function TeammatePage() {
               <select
                 value={formData.onboarding_status}
                 onChange={(e) => setFormData({...formData, onboarding_status: e.target.value})}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="Not started">Not started</option>
                 <option value="In progress">In progress</option>
@@ -464,7 +464,7 @@ export default function TeammatePage() {
               type="url"
               value={formData.linkedin_url}
               onChange={(e) => setFormData({...formData, linkedin_url: e.target.value})}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
@@ -474,7 +474,7 @@ export default function TeammatePage() {
               type="url"
               value={formData.calendly_link}
               onChange={(e) => setFormData({...formData, calendly_link: e.target.value})}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 

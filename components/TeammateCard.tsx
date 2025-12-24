@@ -23,7 +23,7 @@ export function TeammateCard({ teammate, index }: TeammateCardProps) {
 
   return (
     <div
-      className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden animate-slide-up hover:-translate-y-2"
+      className="group bg-card rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden animate-slide-up hover:-translate-y-2"
       style={{ animationDelay: `${index * 50}ms` }}
     >
       {/* Gradient Header */}
@@ -33,7 +33,7 @@ export function TeammateCard({ teammate, index }: TeammateCardProps) {
         {/* Status Badge */}
         {teammate.onboardingStatus !== 'Done' && (
           <div className="absolute top-3 right-3">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold font-poppins bg-white/90 backdrop-blur-sm text-lh-text shadow-lg">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold font-poppins bg-card/90 backdrop-blur-sm text-foreground shadow-lg">
               🚀 New Member
             </span>
           </div>
@@ -43,7 +43,7 @@ export function TeammateCard({ teammate, index }: TeammateCardProps) {
       {/* Profile Photo */}
       <div className="relative px-6 -mt-16 mb-4">
         <Link href={`/directory/${teammate.id}`} className="block w-24 h-24 mx-auto">
-          <div className="w-24 h-24 rounded-full overflow-hidden bg-white ring-4 ring-white shadow-xl cursor-pointer">
+          <div className="w-24 h-24 rounded-full overflow-hidden bg-card ring-4 ring-card shadow-xl cursor-pointer">
             {teammate.headshotUrl ? (
               <img
                 src={teammate.headshotUrl}
@@ -65,17 +65,17 @@ export function TeammateCard({ teammate, index }: TeammateCardProps) {
       <div className="px-6 pb-6">
         {/* Name & Position - Clickable to Profile */}
         <Link href={`/directory/${teammate.id}`} className="block mb-4 group/link cursor-pointer">
-          <h3 className="text-xl font-bold font-poppins text-lh-text text-center mb-1 group-hover/link:text-lh-blue transition-colors">
+          <h3 className="text-xl font-bold font-poppins text-foreground text-center mb-1 group-hover/link:text-lh-blue transition-colors">
             {teammate.fullName}
           </h3>
-          <p className="text-sm font-poppins text-lh-secondary-text text-center group-hover/link:text-lh-blue/80 transition-colors">
+          <p className="text-sm font-poppins text-muted-foreground text-center group-hover/link:text-lh-blue/80 transition-colors">
             {teammate.position}
           </p>
         </Link>
 
         {/* Branch */}
         <div className="flex items-center justify-center mb-4">
-          <span className="text-xs font-poppins text-lh-secondary-text bg-lh-bg px-3 py-1.5 rounded-full">
+          <span className="text-xs font-poppins text-muted-foreground bg-muted px-3 py-1.5 rounded-full">
             {teammate.branch}
           </span>
         </div>
