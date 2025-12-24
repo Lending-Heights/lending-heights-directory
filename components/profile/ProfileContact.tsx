@@ -92,8 +92,8 @@ export function ProfileContact({ teammate }: ProfileContactProps) {
   return (
     <div className="sticky top-8 space-y-6">
       {/* Contact Actions */}
-      <div className="bg-lh-bg rounded-xl p-6">
-        <h3 className="text-lg font-bold font-poppins text-lh-text mb-4">
+      <div className="bg-muted rounded-xl p-6">
+        <h3 className="text-lg font-bold font-poppins text-foreground mb-4">
           Contact
         </h3>
         <div className="space-y-3">
@@ -125,8 +125,8 @@ export function ProfileContact({ teammate }: ProfileContactProps) {
 
       {/* Social Media */}
       {socialLinks.some(link => link.show) && (
-        <div className="bg-lh-bg rounded-xl p-6">
-          <h3 className="text-lg font-bold font-poppins text-lh-text mb-4">
+        <div className="bg-muted rounded-xl p-6">
+          <h3 className="text-lg font-bold font-poppins text-foreground mb-4">
             Social Media
           </h3>
           <div className="grid grid-cols-2 gap-3">
@@ -140,7 +140,7 @@ export function ProfileContact({ teammate }: ProfileContactProps) {
                   rel="noopener noreferrer"
                   className={`
                     flex flex-col items-center gap-2 p-4 rounded-lg
-                    bg-white border-2 border-lh-border
+                    bg-card border-2 border-border
                     hover:text-white hover:border-transparent
                     transition-all duration-300
                     ${link.color}
@@ -159,8 +159,8 @@ export function ProfileContact({ teammate }: ProfileContactProps) {
 
       {/* Professional Links */}
       {professionalLinks.some(link => link.show) && (
-        <div className="bg-lh-bg rounded-xl p-6">
-          <h3 className="text-lg font-bold font-poppins text-lh-text mb-4">
+        <div className="bg-muted rounded-xl p-6">
+          <h3 className="text-lg font-bold font-poppins text-foreground mb-4">
             Professional Links
           </h3>
           <div className="space-y-2">
@@ -172,15 +172,15 @@ export function ProfileContact({ teammate }: ProfileContactProps) {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-3 rounded-lg bg-white border border-lh-border hover:border-lh-blue hover:bg-lh-blue/5 transition-all group"
+                  className="flex items-center justify-between p-3 rounded-lg bg-card border border-border hover:border-lh-blue hover:bg-lh-blue/5 transition-all group"
                 >
                   <div className="flex items-center gap-2">
                     <Globe className="w-4 h-4 text-lh-blue" />
-                    <span className="text-sm font-semibold font-poppins text-lh-text">
+                    <span className="text-sm font-semibold font-poppins text-foreground">
                       {link.label}
                     </span>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-lh-secondary-text group-hover:text-lh-blue transition-colors" />
+                  <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-lh-blue transition-colors" />
                 </a>
               ))}
           </div>

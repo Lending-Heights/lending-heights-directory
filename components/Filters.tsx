@@ -44,13 +44,13 @@ export function Filters({ filters, onFilterChange, resultCount, totalCount }: Fi
     <div className="space-y-4 animate-slide-up">
       {/* Search Bar */}
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-lh-secondary-text w-5 h-5" />
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
         <input
           type="text"
           placeholder="Search by name, position, or branch..."
           value={filters.search}
           onChange={(e) => onFilterChange({ ...filters, search: e.target.value })}
-          className="w-full pl-12 pr-4 py-4 border-2 border-lh-border rounded-xl font-poppins text-lh-text placeholder:text-lh-secondary-text focus:outline-none focus:border-lh-blue focus:ring-4 focus:ring-lh-blue/10 transition-all"
+          className="w-full pl-12 pr-4 py-4 border-2 border-border rounded-xl font-poppins text-foreground bg-background placeholder:text-muted-foreground focus:outline-none focus:border-lh-blue focus:ring-4 focus:ring-lh-blue/10 transition-all"
         />
       </div>
 
@@ -58,14 +58,14 @@ export function Filters({ filters, onFilterChange, resultCount, totalCount }: Fi
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Department Filter */}
         <div className="flex-1">
-          <label className="block text-xs font-semibold font-poppins text-lh-secondary-text mb-1.5 uppercase tracking-wider">
+          <label className="block text-xs font-semibold font-poppins text-muted-foreground mb-1.5 uppercase tracking-wider">
             <Filter className="inline w-3 h-3 mr-1" />
             Department
           </label>
           <select
             value={filters.department}
             onChange={(e) => onFilterChange({ ...filters, department: e.target.value as Department | 'All' })}
-            className="w-full px-4 py-3 border-2 border-lh-border rounded-xl font-poppins text-lh-text focus:outline-none focus:border-lh-blue focus:ring-4 focus:ring-lh-blue/10 transition-all bg-white"
+            className="w-full px-4 py-3 border-2 border-border rounded-xl font-poppins text-foreground bg-background focus:outline-none focus:border-lh-blue focus:ring-4 focus:ring-lh-blue/10 transition-all"
           >
             {departments.map((dept) => (
               <option key={dept} value={dept}>
@@ -77,14 +77,14 @@ export function Filters({ filters, onFilterChange, resultCount, totalCount }: Fi
 
         {/* Branch Filter */}
         <div className="flex-1">
-          <label className="block text-xs font-semibold font-poppins text-lh-secondary-text mb-1.5 uppercase tracking-wider">
+          <label className="block text-xs font-semibold font-poppins text-muted-foreground mb-1.5 uppercase tracking-wider">
             <Filter className="inline w-3 h-3 mr-1" />
             Branch
           </label>
           <select
             value={filters.branch}
             onChange={(e) => onFilterChange({ ...filters, branch: e.target.value as Branch | 'All' })}
-            className="w-full px-4 py-3 border-2 border-lh-border rounded-xl font-poppins text-lh-text focus:outline-none focus:border-lh-blue focus:ring-4 focus:ring-lh-blue/10 transition-all bg-white"
+            className="w-full px-4 py-3 border-2 border-border rounded-xl font-poppins text-foreground bg-background focus:outline-none focus:border-lh-blue focus:ring-4 focus:ring-lh-blue/10 transition-all"
           >
             {branches.map((branch) => (
               <option key={branch} value={branch}>
@@ -96,14 +96,14 @@ export function Filters({ filters, onFilterChange, resultCount, totalCount }: Fi
 
         {/* Status Filter */}
         <div className="flex-1">
-          <label className="block text-xs font-semibold font-poppins text-lh-secondary-text mb-1.5 uppercase tracking-wider">
+          <label className="block text-xs font-semibold font-poppins text-muted-foreground mb-1.5 uppercase tracking-wider">
             <Filter className="inline w-3 h-3 mr-1" />
             Status
           </label>
           <select
             value={filters.onboardingStatus}
             onChange={(e) => onFilterChange({ ...filters, onboardingStatus: e.target.value as OnboardingStatus | 'All' })}
-            className="w-full px-4 py-3 border-2 border-lh-border rounded-xl font-poppins text-lh-text focus:outline-none focus:border-lh-blue focus:ring-4 focus:ring-lh-blue/10 transition-all bg-white"
+            className="w-full px-4 py-3 border-2 border-border rounded-xl font-poppins text-foreground bg-background focus:outline-none focus:border-lh-blue focus:ring-4 focus:ring-lh-blue/10 transition-all"
           >
             <option value="All">All Status</option>
             <option value="Done">Active</option>
@@ -115,9 +115,9 @@ export function Filters({ filters, onFilterChange, resultCount, totalCount }: Fi
 
       {/* Active Filters & Results */}
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="text-sm font-poppins text-lh-secondary-text">
+        <div className="text-sm font-poppins text-muted-foreground">
           Showing <span className="font-bold text-lh-blue">{resultCount}</span> of{' '}
-          <span className="font-bold text-lh-text">{totalCount}</span> teammates
+          <span className="font-bold text-foreground">{totalCount}</span> teammates
         </div>
 
         {hasActiveFilters && (

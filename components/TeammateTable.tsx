@@ -83,18 +83,18 @@ export function TeammateTable({ teammates }: TeammateTableProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Done':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
       case 'In progress':
-        return 'bg-lh-yellow text-lh-text';
+        return 'bg-lh-yellow text-lh-text dark:bg-yellow-900/30 dark:text-yellow-400';
       case 'Not started':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-muted-foreground';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-muted-foreground';
     }
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden animate-fade-in">
+    <div className="bg-card rounded-xl shadow-md overflow-hidden animate-fade-in">
       {/* Table wrapper with horizontal scroll */}
       <div className="overflow-x-auto">
         <table className="w-full">
@@ -197,9 +197,9 @@ export function TeammateTable({ teammates }: TeammateTableProps) {
           {/* Table Body */}
           <tbody className="divide-y divide-lh-border">
             {sortedTeammates.map((teammate, index) => (
-              <tr 
+              <tr
                 key={teammate.id}
-                className="hover:bg-lh-bg transition-colors animate-fade-in"
+                className="hover:bg-muted/50 transition-colors animate-fade-in"
                 style={{ animationDelay: `${index * 30}ms` }}
               >
                 {/* Photo */}
@@ -221,14 +221,14 @@ export function TeammateTable({ teammates }: TeammateTableProps) {
 
                 {/* Name */}
                 <td className="px-4 py-4">
-                  <div className="font-poppins font-semibold text-lh-text whitespace-nowrap">
+                  <div className="font-poppins font-semibold text-foreground whitespace-nowrap">
                     {teammate.fullName}
                   </div>
                 </td>
 
                 {/* Position */}
                 <td className="px-4 py-4">
-                  <div className="font-poppins text-sm text-lh-secondary-text">
+                  <div className="font-poppins text-sm text-muted-foreground">
                     {teammate.position}
                   </div>
                 </td>
@@ -245,7 +245,7 @@ export function TeammateTable({ teammates }: TeammateTableProps) {
 
                 {/* Branch */}
                 <td className="px-4 py-4">
-                  <div className="font-poppins text-sm text-lh-text whitespace-nowrap">
+                  <div className="font-poppins text-sm text-foreground whitespace-nowrap">
                     {teammate.branch}
                   </div>
                 </td>
@@ -270,29 +270,29 @@ export function TeammateTable({ teammates }: TeammateTableProps) {
                       {teammate.phone}
                     </a>
                   ) : (
-                    <span className="text-lh-secondary-text text-sm">—</span>
+                    <span className="text-muted-foreground text-sm">—</span>
                   )}
                 </td>
 
                 {/* NMLS */}
                 <td className="px-4 py-4">
                   {teammate.nmls ? (
-                    <span className="font-poppins text-sm text-lh-text whitespace-nowrap">
+                    <span className="font-poppins text-sm text-foreground whitespace-nowrap">
                       {teammate.nmls}
                     </span>
                   ) : (
-                    <span className="text-lh-secondary-text text-sm">—</span>
+                    <span className="text-muted-foreground text-sm">—</span>
                   )}
                 </td>
 
                 {/* Manager */}
                 <td className="px-4 py-4">
                   {teammate.manager ? (
-                    <span className="font-poppins text-sm text-lh-text whitespace-nowrap">
+                    <span className="font-poppins text-sm text-foreground whitespace-nowrap">
                       {teammate.manager}
                     </span>
                   ) : (
-                    <span className="text-lh-secondary-text text-sm">—</span>
+                    <span className="text-muted-foreground text-sm">—</span>
                   )}
                 </td>
 
@@ -355,7 +355,7 @@ export function TeammateTable({ teammates }: TeammateTableProps) {
       {/* Empty State */}
       {sortedTeammates.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-lh-secondary-text font-poppins">No teammates found</p>
+          <p className="text-muted-foreground font-poppins">No teammates found</p>
         </div>
       )}
     </div>

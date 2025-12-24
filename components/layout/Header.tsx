@@ -35,10 +35,10 @@ const roleLabels: Record<UserRole, string> = {
 };
 
 const roleColors: Record<UserRole, string> = {
-  user: 'bg-gray-100 text-gray-700',
-  manager: 'bg-blue-100 text-blue-700',
-  admin: 'bg-purple-100 text-purple-700',
-  executive: 'bg-amber-100 text-amber-700',
+  user: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
+  manager: 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300',
+  admin: 'bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300',
+  executive: 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300',
 };
 
 function RoleSwitcher() {
