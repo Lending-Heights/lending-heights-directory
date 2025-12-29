@@ -363,6 +363,86 @@ export interface Database {
           updated_at?: string
         }
       }
+      marketing_assets: {
+        Row: {
+          id: string
+          name: string
+          description: string | null
+          asset_type: 'logo' | 'flyer' | 'social_media' | 'video' | 'email_template' | 'presentation' | 'other'
+          file_url: string
+          file_name: string
+          file_size: number | null
+          mime_type: string | null
+          thumbnail_url: string | null
+          uploaded_by: string | null
+          is_featured: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description?: string | null
+          asset_type?: 'logo' | 'flyer' | 'social_media' | 'video' | 'email_template' | 'presentation' | 'other'
+          file_url: string
+          file_name: string
+          file_size?: number | null
+          mime_type?: string | null
+          thumbnail_url?: string | null
+          uploaded_by?: string | null
+          is_featured?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string | null
+          asset_type?: 'logo' | 'flyer' | 'social_media' | 'video' | 'email_template' | 'presentation' | 'other'
+          file_url?: string
+          file_name?: string
+          file_size?: number | null
+          mime_type?: string | null
+          thumbnail_url?: string | null
+          uploaded_by?: string | null
+          is_featured?: boolean
+          updated_at?: string
+        }
+      }
+      marketing_campaigns: {
+        Row: {
+          id: string
+          name: string
+          description: string | null
+          status: 'planned' | 'active' | 'completed' | 'archived'
+          start_date: string | null
+          end_date: string | null
+          owner_id: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description?: string | null
+          status?: 'planned' | 'active' | 'completed' | 'archived'
+          start_date?: string | null
+          end_date?: string | null
+          owner_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string | null
+          status?: 'planned' | 'active' | 'completed' | 'archived'
+          start_date?: string | null
+          end_date?: string | null
+          owner_id?: string | null
+          updated_at?: string
+        }
+      }
     }
     Views: {
       teammates_with_manager_info: {
