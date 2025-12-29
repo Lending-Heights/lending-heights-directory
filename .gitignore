@@ -44,3 +44,8 @@ coverage
 # Misc
 *.zip
 .claude/
+
+# Sensitive data files (pipeline exports contain PII)
+Pipeline Reports.csv
+*.csv
+!public/*.csv
