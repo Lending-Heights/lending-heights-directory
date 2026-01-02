@@ -15,8 +15,6 @@ export interface AriveAuthConfig {
   clientId: string;
   secret: string;
   apiKey: string;
-  appId: string;
-  appSecretHash: string;
 }
 
 export interface AriveAuthResponse {
@@ -88,13 +86,11 @@ export async function authenticateArive(config: AriveAuthConfig): Promise<{ toke
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-API-Key': config.apiKey,
       },
       body: JSON.stringify({
         clientId: config.clientId,
         secret: config.secret,
-        apiKey: config.apiKey,
-        appId: config.appId,
-        appSecretHash: config.appSecretHash,
       }),
     });
 

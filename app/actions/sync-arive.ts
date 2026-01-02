@@ -49,13 +49,10 @@ export async function syncAriveLoans(): Promise<SyncResult> {
     }
 
     // Get ARIVE credentials from environment variables
-    // In production, these should be stored in Supabase Vault
     const ariveConfig: AriveAuthConfig = {
       clientId: process.env.ARIVE_CLIENT_ID || '',
       secret: process.env.ARIVE_SECRET || '',
       apiKey: process.env.ARIVE_API_KEY || '',
-      appId: process.env.ARIVE_APP_ID || '',
-      appSecretHash: process.env.ARIVE_APP_SECRET_HASH || '',
     };
 
     // Validate config
