@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useAuthStore, useSidebarStore, type UserRole } from '@/lib/store';
+import { useAuth } from '@/components/providers/AuthProvider';
 import { MobileSidebar } from './Sidebar';
 import { ThemeToggle } from './ThemeToggle';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ import {
   Settings,
   LogOut,
   Shield,
+  LogIn,
 } from 'lucide-react';
 
 const roleLabels: Record<UserRole, string> = {
@@ -130,17 +132,51 @@ function Breadcrumbs() {
 }
 
 function UserMenu() {
-  const { user, logout } = useAuthStore();
+  const { user: storeUser } = useAuthStore();
+  const { user: authUser, signOut, isLoading } = useAuth();
+
+  // Use real auth user if available, fall back to store user (demo mode)
+  const isAuthenticated = !!authUser;
+  const displayUser = authUser
+    ? {
+        displayName: authUser.user_metadata?.full_name || authUser.user_metadata?.name || authUser.email,
+        email: authUser.email,
+        firstName: authUser.user_metadata?.full_name?.split(' ')[0] || authUser.email?.[0]?.toUpperCase(),
+        lastName: authUser.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
+        avatarUrl: authUser.user_metadata?.avatar_url || authUser.user_metadata?.picture,
+      }
+    : storeUser;
+
+  // Show login button if not authenticated
+  if (!isAuthenticated && !storeUser) {
+    return (
+      <Button variant="outline" size="sm" asChild>
+        <Link href="/login" className="gap-2">
+          <LogIn className="h-4 w-4" />
+          Sign In
+        </Link>
+      </Button>
+    );
+  }
+
+  const handleLogout = async () => {
+    if (isAuthenticated) {
+      await signOut();
+    } else {
+      // Demo mode logout
+      useAuthStore.getState().logout();
+    }
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-9 w-9 rounded-full">
           <Avatar className="h-9 w-9">
-            <AvatarImage src={user?.avatarUrl} />
+            <AvatarImage src={displayUser?.avatarUrl} />
             <AvatarFallback className="bg-primary text-primary-foreground">
-              {user?.firstName?.[0]}
-              {user?.lastName?.[0]}
+              {displayUser?.firstName?.[0]}
+              {displayUser?.lastName?.[0] || displayUser?.firstName?.[1]}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -148,8 +184,11 @@ function UserMenu() {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium">{user?.displayName}</p>
-            <p className="text-xs text-muted-foreground">{user?.email}</p>
+            <p className="text-sm font-medium">{displayUser?.displayName}</p>
+            <p className="text-xs text-muted-foreground">{displayUser?.email}</p>
+            {!isAuthenticated && (
+              <Badge variant="secondary" className="w-fit text-xs mt-1">Demo Mode</Badge>
+            )}
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -167,11 +206,11 @@ function UserMenu() {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={logout}
+          onClick={handleLogout}
           className="flex items-center gap-2 text-destructive focus:text-destructive cursor-pointer"
         >
           <LogOut className="h-4 w-4" />
-          Log out
+          {isAuthenticated ? 'Sign out' : 'Exit Demo'}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
