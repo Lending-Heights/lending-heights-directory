@@ -153,7 +153,7 @@ export async function syncAriveLoans(): Promise<SyncResult> {
 
     return {
       success: false,
-      message: 'Sync failed',
+      message: `Sync failed: ${errorMessage}`,
       error: errorMessage,
     };
   }
