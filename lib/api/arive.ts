@@ -82,6 +82,12 @@ const ARIVE_BASE_URL = 'https://api-connect.arive.com';
  */
 export async function authenticateArive(config: AriveAuthConfig): Promise<{ token: string; error: string | null }> {
   try {
+    console.log('[ARIVE] Attempting authentication...');
+    console.log('[ARIVE] Endpoint:', `${ARIVE_BASE_URL}/api/auth/login`);
+    console.log('[ARIVE] ClientId present:', !!config.clientId);
+    console.log('[ARIVE] Secret present:', !!config.secret);
+    console.log('[ARIVE] ApiKey present:', !!config.apiKey);
+
     const response = await fetch(`${ARIVE_BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: {
@@ -91,17 +97,23 @@ export async function authenticateArive(config: AriveAuthConfig): Promise<{ toke
       body: JSON.stringify({
         clientId: config.clientId,
         secret: config.secret,
+        apiKey: config.apiKey,  // Also include in body per ARIVE API docs
       }),
     });
 
+    console.log('[ARIVE] Response status:', response.status);
+    const responseText = await response.text();
+    console.log('[ARIVE] Response body:', responseText);
+
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Authentication failed: ${response.status} - ${errorText}`);
+      throw new Error(`Authentication failed: ${response.status} - ${responseText}`);
     }
 
-    const data: AriveAuthResponse = await response.json();
-    return { token: data.accessToken, error: null };
+    const data = JSON.parse(responseText);
+    // Handle both camelCase and PascalCase response formats
+    return { token: data.accessToken || data.AccessToken, error: null };
   } catch (error) {
+    console.error('[ARIVE] Auth error:', error);
     return {
       token: '',
       error: error instanceof Error ? error.message : 'Authentication failed',
