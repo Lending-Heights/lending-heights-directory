@@ -363,6 +363,201 @@ export interface Database {
           updated_at?: string
         }
       }
+      marketing_assets: {
+        Row: {
+          id: string
+          name: string
+          description: string | null
+          asset_type: 'logo' | 'flyer' | 'social_media' | 'video' | 'email_template' | 'presentation' | 'other'
+          file_url: string
+          file_name: string
+          file_size: number | null
+          mime_type: string | null
+          thumbnail_url: string | null
+          uploaded_by: string | null
+          is_featured: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description?: string | null
+          asset_type?: 'logo' | 'flyer' | 'social_media' | 'video' | 'email_template' | 'presentation' | 'other'
+          file_url: string
+          file_name: string
+          file_size?: number | null
+          mime_type?: string | null
+          thumbnail_url?: string | null
+          uploaded_by?: string | null
+          is_featured?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string | null
+          asset_type?: 'logo' | 'flyer' | 'social_media' | 'video' | 'email_template' | 'presentation' | 'other'
+          file_url?: string
+          file_name?: string
+          file_size?: number | null
+          mime_type?: string | null
+          thumbnail_url?: string | null
+          uploaded_by?: string | null
+          is_featured?: boolean
+          updated_at?: string
+        }
+      }
+      marketing_campaigns: {
+        Row: {
+          id: string
+          name: string
+          description: string | null
+          status: 'planned' | 'active' | 'completed' | 'archived'
+          start_date: string | null
+          end_date: string | null
+          owner_id: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description?: string | null
+          status?: 'planned' | 'active' | 'completed' | 'archived'
+          start_date?: string | null
+          end_date?: string | null
+          owner_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string | null
+          status?: 'planned' | 'active' | 'completed' | 'archived'
+          start_date?: string | null
+          end_date?: string | null
+          owner_id?: string | null
+          updated_at?: string
+        }
+      }
+      loans: {
+        Row: {
+          id: string
+          created_at: string
+          updated_at: string
+          arive_loan_id: string
+          loan_number: string | null
+          current_status: string | null
+          current_status_date: string | null
+          total_loan_amount: number | null
+          mortgage_type: string | null
+          property_type: string | null
+          property_address: string | null
+          property_city: string | null
+          property_state: string | null
+          property_zip: string | null
+          borrower_first_name: string | null
+          borrower_last_name: string | null
+          borrower_email: string | null
+          loan_originator_name: string | null
+          loan_originator_email: string | null
+          loan_originator_nmls: string | null
+          lender_name: string | null
+          lender_code: string | null
+          org_unit_display_name: string | null
+          org_unit_code: string | null
+          arive_created_at: string | null
+          arive_updated_at: string | null
+          raw_data: Json | null
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          updated_at?: string
+          arive_loan_id: string
+          loan_number?: string | null
+          current_status?: string | null
+          current_status_date?: string | null
+          total_loan_amount?: number | null
+          mortgage_type?: string | null
+          property_type?: string | null
+          property_address?: string | null
+          property_city?: string | null
+          property_state?: string | null
+          property_zip?: string | null
+          borrower_first_name?: string | null
+          borrower_last_name?: string | null
+          borrower_email?: string | null
+          loan_originator_name?: string | null
+          loan_originator_email?: string | null
+          loan_originator_nmls?: string | null
+          lender_name?: string | null
+          lender_code?: string | null
+          org_unit_display_name?: string | null
+          org_unit_code?: string | null
+          arive_created_at?: string | null
+          arive_updated_at?: string | null
+          raw_data?: Json | null
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          updated_at?: string
+          arive_loan_id?: string
+          loan_number?: string | null
+          current_status?: string | null
+          current_status_date?: string | null
+          total_loan_amount?: number | null
+          mortgage_type?: string | null
+          property_type?: string | null
+          property_address?: string | null
+          property_city?: string | null
+          property_state?: string | null
+          property_zip?: string | null
+          borrower_first_name?: string | null
+          borrower_last_name?: string | null
+          borrower_email?: string | null
+          loan_originator_name?: string | null
+          loan_originator_email?: string | null
+          loan_originator_nmls?: string | null
+          lender_name?: string | null
+          lender_code?: string | null
+          org_unit_display_name?: string | null
+          org_unit_code?: string | null
+          arive_created_at?: string | null
+          arive_updated_at?: string | null
+          raw_data?: Json | null
+        }
+      }
+      sync_logs: {
+        Row: {
+          id: string
+          created_at: string
+          status: 'running' | 'completed' | 'failed'
+          records_fetched: number
+          records_upserted: number
+          error_message: string | null
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          status: 'running' | 'completed' | 'failed'
+          records_fetched: number
+          records_upserted: number
+          error_message?: string | null
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          status?: 'running' | 'completed' | 'failed'
+          records_fetched?: number
+          records_upserted?: number
+          error_message?: string | null
+        }
+      }
     }
     Views: {
       teammates_with_manager_info: {

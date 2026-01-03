@@ -6,6 +6,7 @@ import {
   Building2,
   CheckSquare,
   Megaphone,
+  DollarSign,
   Settings,
   UserCircle,
   Bell,
@@ -64,6 +65,11 @@ export const navigation: NavItem[] = [
     name: 'Marketing',
     href: '/marketing',
     icon: Megaphone,
+  },
+  {
+    name: 'Closings',
+    href: '/closings',
+    icon: DollarSign,
   },
 ];
 

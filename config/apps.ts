@@ -5,6 +5,7 @@ import {
   Building2,
   CheckSquare,
   Megaphone,
+  DollarSign,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -92,6 +93,17 @@ export const apps: App[] = [
     category: 'marketing',
     isActive: true,
     comingSoon: true,
+  },
+  {
+    id: 'closings',
+    name: 'Closings',
+    description: 'MTD/YTD closings performance and analytics',
+    href: '/closings',
+    icon: DollarSign,
+    color: '#10B981',
+    bgColor: 'bg-emerald-50',
+    category: 'operations',
+    isActive: true,
   },
 ];
 
