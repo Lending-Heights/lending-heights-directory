@@ -15,6 +15,7 @@ import {
   getLastSyncInfo,
 } from '@/lib/api/closings';
 import ClosingsDashboard from './ClosingsDashboard';
+import { CSVUploadWrapper } from './CSVUploadWrapper';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 
@@ -73,14 +74,15 @@ async function ClosingsData() {
           lastSync={null}
           hasData={false}
         />
-        <Card className="border-dashed border-2 border-amber-300 bg-amber-50">
+        <Card className="border-dashed border-2 border-amber-300 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-700">
           <CardContent className="p-4">
-            <p className="text-sm text-amber-800 text-center">
-              <strong>No Data:</strong> The loans table is empty. Configure ARIVE API credentials
-              and run a sync to populate the dashboard with real data.
+            <p className="text-sm text-amber-800 dark:text-amber-400 text-center">
+              <strong>No Data:</strong> The loans table is empty. Upload a Pipeline Reports CSV
+              to populate the dashboard with loan data.
             </p>
           </CardContent>
         </Card>
+        <CSVUploadWrapper />
       </div>
     );
   }
