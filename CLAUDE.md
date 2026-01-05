@@ -1,12 +1,13 @@
 # Lending Heights Hub - Project Documentation
 
-## Current Status (Updated: December 22, 2024)
+## Current Status (Updated: January 5, 2026)
 
 ### Deployment Status: LIVE
 - **GitHub:** https://github.com/Lending-Heights/lending-heights-directory (Public)
 - **Vercel:** Auto-deploys from `main` branch
 - **Supabase:** Connected and working
 - **Build:** Passing
+- **Auth:** Microsoft Entra ID via Supabase (configured)
 
 ### What's Complete
 
@@ -19,39 +20,49 @@
 - Profile settings and notification center pages
 - Mobile responsive with sheet menu
 - Dark mode CSS variables (ready for implementation)
+- Microsoft Entra ID authentication (Azure AD) - LIVE
 
 **Team Directory (Active App):**
 - Directory page with search, filters, view toggle (gallery/table)
 - Profile pages with full teammate details
-- Create teammate functionality (modal form)
-- Edit teammate functionality (modal on profile page)
-- Delete teammate with confirmation dialog
+- Create/Edit/Delete teammate functionality
 - CSV export
 - Supabase database integration
 
-**Placeholder Apps (Coming Soon):**
-- Calendar, TalentFlow, Partner CRM, Checklists, Marketing Hub
+**Closings Dashboard (Active App):**
+- Full closings analytics dashboard with metrics
+- MTD/YTD closings, volume, loan officer rankings
+- **CSV Upload Feature** - Import ARIVE Pipeline Reports
+  - Drag-and-drop upload UI
+  - 220 columns mapped (SSN excluded for security)
+  - Upsert logic (updates existing, adds new loans)
+  - Import statistics and progress tracking
+- Loans table expanded with full schema (migration run 2026-01-05)
+- RLS policies for authenticated users
+
+**ARIVE Integration Status:**
+- Direct API NOT available (api-connect.arive.com is private/internal)
+- CSV upload is the working solution
+- ARIVE credentials in Vercel (not used, kept for future reference)
 
 ### What's Remaining
 
-**HIGH PRIORITY:**
-1. **Add DELETE RLS Policy** - Required for delete to work in production
-   - Location: Supabase Dashboard > SQL Editor
-   - SQL: `CREATE POLICY "Allow public delete" ON teammates FOR DELETE TO public USING (true);`
+**READY TO TEST:**
+1. **CSV Upload** - Go to Closings page, upload Pipeline Reports.csv
+   - SQL migration already run in Supabase
+   - Code deployed to production
 
 **MEDIUM PRIORITY:**
-- Image upload for headshots (currently URL-only)
 - Dark mode toggle implementation
 - Real-time updates (Supabase subscriptions)
+- Marketing Hub buildout (partially complete)
 
 **LOW PRIORITY (Future):**
-- Microsoft Entra ID authentication
 - Build out Calendar app
-- Build out other placeholder apps
+- Build out TalentFlow, Partner CRM, Checklists
 - Tag/License management interfaces
-- Bulk CSV import
 - Org chart view
-- Analytics dashboard
+- LO Scorecard dashboard (planned)
 
 ---
 
@@ -64,54 +75,82 @@ app/(hub)/
   ├── directory/              # Team Directory
   │   ├── page.tsx            # Listing with search/filters
   │   └── [id]/page.tsx       # Profile detail with Edit/Delete
-  ├── calendar/               # Placeholder
+  ├── closings/               # Closings Dashboard
+  │   ├── page.tsx            # Server component (data fetching)
+  │   ├── ClosingsDashboard.tsx  # Client dashboard component
+  │   └── CSVUploadWrapper.tsx   # CSV upload wrapper
+  ├── calendar/               # Calendar (functional)
   ├── talentflow/             # Placeholder
   ├── crm/                    # Placeholder
   ├── checklists/             # Placeholder
-  ├── marketing/              # Placeholder
+  ├── marketing/              # Marketing Hub (partial)
   ├── admin/                  # Admin section (role-protected)
-  │   ├── page.tsx            # Overview
-  │   ├── users/page.tsx
-  │   ├── permissions/page.tsx
-  │   └── audit/page.tsx
   ├── profile/page.tsx        # User settings
   └── notifications/page.tsx  # Notification center
+
+app/actions/
+  ├── import-csv.ts           # CSV import server action
+  ├── sync-arive.ts           # ARIVE sync (not working - API private)
+  └── auth.ts                 # Auth helpers
+
+app/auth/
+  └── callback/route.ts       # OAuth callback handler
 
 components/
   ├── ui/                     # shadcn/ui components
   ├── layout/                 # Header, Sidebar
-  ├── dashboard/              # AppCard, AppGrid, WelcomeHeader, QuickActions
+  ├── dashboard/              # AppCard, AppGrid, etc.
   ├── shared/                 # PageHeader, EmptyState
-  ├── TeammateCard.tsx        # Gallery view card
-  ├── TeammateTable.tsx       # Table view
-  └── TeammateModal.tsx       # Modal wrapper
+  ├── closings/               # CSVUpload component
+  └── providers/              # AuthProvider
 
 lib/
-  ├── api/teammates.ts        # All Supabase CRUD operations
-  ├── supabase.ts             # Supabase client
-  ├── utils.ts                # Utility functions (cn)
+  ├── api/
+  │   ├── teammates.ts        # Teammate CRUD
+  │   ├── closings.ts         # Closings queries
+  │   ├── arive.ts            # ARIVE API client (not working)
+  │   └── marketing.ts        # Marketing queries
+  ├── config/
+  │   └── csv-column-mapping.ts  # CSV to DB column mapping
+  ├── supabase/               # Supabase clients (client, server, middleware)
   └── store/                  # Zustand stores
-      ├── authStore.ts        # User/role state
-      └── sidebarStore.ts     # Sidebar UI state
 
-config/
-  ├── navigation.ts           # Sidebar nav structure
-  └── apps.ts                 # App catalog for dashboard
+supabase/
+  └── migrations/
+      └── 20260103_expand_loans_table.sql  # Loans table expansion (RAN)
 ```
+
+---
+
+## Key Files for CSV Upload Feature
+
+1. **components/closings/CSVUpload.tsx** - Upload UI with drag-drop
+2. **app/actions/import-csv.ts** - Server action for parsing/upserting
+3. **lib/config/csv-column-mapping.ts** - Maps 222 CSV columns to DB (SSN excluded)
+4. **supabase/migrations/20260103_expand_loans_table.sql** - Schema migration (ALREADY RUN)
 
 ---
 
 ## Deployment Info
 
-### Environment Variables (Vercel)
+### Environment Variables (Vercel - Production)
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://ppywhyoxuiucwsgiyqzx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBweXdoeW94dWl1Y3dzZ2l5cXp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5MDg3NTMsImV4cCI6MjA4MTQ4NDc1M30.Kv3HN-0aL5fLRaZq1nFVA6xPT4dTQ_0suadVx4SqxTQ
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+ARIVE_CLIENT_ID=778en38voe5bcfiii76glil7ja
+ARIVE_SECRET=***
+ARIVE_API_KEY=***
+
+# Azure/Entra ID (configured in Supabase)
+# Redirect URLs configured for:
+# - https://ppywhyoxuiucwsgiyqzx.supabase.co/auth/v1/callback
+# - https://lending-heights-directory-lemon.vercel.app/auth/callback
 ```
 
 ### Git Info
 - **User:** Vinny Naccarelli (vnaccarelli@lhloans.com)
 - **Org:** Lending-Heights
+- **Main Branch:** `main`
 
 ---
 
@@ -123,6 +162,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd
 - **Styling:** Tailwind CSS with CSS variables
 - **State:** Zustand (persisted stores)
 - **Database:** Supabase (PostgreSQL)
+- **Auth:** Microsoft Entra ID via Supabase
 - **Deployment:** Vercel
 - **Icons:** Lucide React
 
@@ -142,13 +182,14 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd
 
 ## Code Conventions
 
-- TypeScript for type safety
+- TypeScript for type safety (strict mode OFF for Supabase compatibility)
 - Functional components with hooks
 - Tailwind utility classes for styling
 - `@/` path alias for imports
-- Supabase queries wrapped in try/catch
+- Supabase queries wrapped in try/catch, use `as any` for new columns
 - Zustand for client-side state with persistence
 - shadcn/ui components in `components/ui/`
+- CSV files in `.gitignore` (PII protection)
 
 ---
 
@@ -159,15 +200,17 @@ npm run dev      # Start dev server
 npm run build    # Production build
 npm run start    # Start production server
 npm run lint     # Run ESLint
+npx tsc --noEmit # Type check without building
 ```
 
 ---
 
 ## Notes for Claude
 
-- Build locally with `npm run build` before pushing
-- TypeScript strict mode is OFF - some Supabase types use `as any`
-- CRUD functions in `lib/api/teammates.ts` are fully implemented
+- Build locally with `npm run build` before pushing (or at least `npx tsc --noEmit`)
 - Vercel auto-deploys on push to `main`
-- User is experienced with React/Next.js - use technical language
-- shadcn/ui components installed: button, card, avatar, dropdown-menu, sheet, tooltip, badge, separator, input, progress
+- User (Vinny) is experienced with React/Next.js - use technical language
+- ARIVE API is NOT publicly accessible - use CSV upload instead
+- Pipeline Reports.csv is in `.gitignore` - never commit CSV files with PII
+- Loans table has 220+ columns now - types in `types/database.ts` may be outdated
+- RLS policies require authenticated users for loans table access
