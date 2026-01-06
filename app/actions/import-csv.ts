@@ -157,11 +157,11 @@ function transformRow(
  * @returns Import result with statistics
  */
 export async function importPipelineCSV(csvContent: string): Promise<ImportResult> {
-  const supabase = await createClient();
-  const errors: string[] = [];
-  const warnings: string[] = [];
-
   try {
+    const supabase = await createClient();
+    const errors: string[] = [];
+    const warnings: string[] = [];
+
     // Check user is authenticated
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
@@ -330,16 +330,21 @@ export async function importPipelineCSV(csvContent: string): Promise<ImportResul
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('[CSV Import] Fatal error:', error);
 
-    // Log sync failure
-    await supabase
-      .from('sync_logs')
-      .insert({
-        status: 'failed',
-        sync_type: 'csv',
-        records_fetched: 0,
-        records_upserted: 0,
-        error_message: errorMessage,
-      } as any);
+    // Try to log sync failure (may fail if supabase client failed to initialize)
+    try {
+      const supabaseForLog = await createClient();
+      await supabaseForLog
+        .from('sync_logs')
+        .insert({
+          status: 'failed',
+          sync_type: 'csv',
+          records_fetched: 0,
+          records_upserted: 0,
+          error_message: errorMessage,
+        } as any);
+    } catch (logError) {
+      console.error('[CSV Import] Failed to log error:', logError);
+    }
 
     return {
       success: false,

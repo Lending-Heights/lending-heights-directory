@@ -56,6 +56,11 @@ export function CSVUpload({ onImportComplete }: CSVUploadProps) {
 
       const result = await importPipelineCSV(content);
 
+      // Handle case where server action returns undefined (shouldn't happen but defensive)
+      if (!result) {
+        throw new Error('Server returned no response. Check Vercel logs for details.');
+      }
+
       if (result.success) {
         setImportStatus({
           status: 'success',
