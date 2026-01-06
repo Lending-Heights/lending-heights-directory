@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Upload, FileText, CheckCircle2, XCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -34,9 +34,9 @@ export function CSVUpload({ onImportComplete }: CSVUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load stats on mount
-  useState(() => {
+  useEffect(() => {
     getImportStats().then(setStats);
-  });
+  }, []);
 
   const handleFile = useCallback(async (file: File) => {
     if (!file.name.endsWith('.csv')) {
