@@ -157,14 +157,23 @@ function transformRow(
  * @returns Import result with statistics
  */
 export async function importPipelineCSV(csvContent: string): Promise<ImportResult> {
+  console.log('[CSV Import] Function called, content length:', csvContent?.length || 0);
+
   try {
+    console.log('[CSV Import] Creating Supabase client...');
     const supabase = await createClient();
+    console.log('[CSV Import] Supabase client created');
+
     const errors: string[] = [];
     const warnings: string[] = [];
 
     // Check user is authenticated
+    console.log('[CSV Import] Checking authentication...');
     const { data: { user }, error: authError } = await supabase.auth.getUser();
+    console.log('[CSV Import] Auth result - user:', user?.email || 'none', 'error:', authError?.message || 'none');
+
     if (authError || !user) {
+      console.log('[CSV Import] Returning unauthorized error');
       return {
         success: false,
         message: 'Unauthorized',
@@ -172,7 +181,7 @@ export async function importPipelineCSV(csvContent: string): Promise<ImportResul
       };
     }
 
-    console.log('[CSV Import] Starting import...');
+    console.log('[CSV Import] Starting import for user:', user.email);
 
     // Parse CSV
     const { headers, rows } = parseCSV(csvContent);
