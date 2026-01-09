@@ -49,3 +49,4 @@ coverage
 Pipeline Reports.csv
 *.csv
 !public/*.csv
+Lending Heights HUB Microsoft Azure.txt

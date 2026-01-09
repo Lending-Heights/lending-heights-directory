@@ -1,131 +1,238 @@
-'use client';
+"use client";
 
-import { PageHeader } from '@/components/shared/PageHeader';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { UserPlus, Users, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { useAuthStore } from "@/lib/store/authStore";
+import { metrics } from "@/lib/api/talentflow";
+import {
+  Users,
+  Calendar,
+  AlertTriangle,
+  ClipboardCheck,
+  FileText,
+  Zap,
+  ArrowRight,
+} from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
-const onboardingStats = [
-  { label: 'Active Onboardings', value: 3, icon: Clock, color: 'text-blue-600', bgColor: 'bg-blue-50' },
-  { label: 'Completed This Month', value: 2, icon: CheckCircle2, color: 'text-green-600', bgColor: 'bg-green-50' },
-  { label: 'Pending Review', value: 1, icon: AlertCircle, color: 'text-yellow-600', bgColor: 'bg-yellow-50' },
-];
+export default function TalentFlowDashboard() {
+  const { user } = useAuthStore();
+  const [loading, setLoading] = useState(true);
+  const [dashboardMetrics, setDashboardMetrics] = useState({
+    activeOnboardings: 0,
+    dueThisWeek: 0,
+    overdue: 0,
+    pendingApprovals: 0,
+    newApplications: 0,
+    teamVelocity: 0,
+  });
 
-const activeOnboardings = [
-  { id: 1, name: 'Sarah Johnson', role: 'Loan Officer', startDate: 'Jan 5, 2026', progress: 65, status: 'In Progress' },
-  { id: 2, name: 'Michael Chen', role: 'Processor', startDate: 'Jan 10, 2026', progress: 40, status: 'In Progress' },
-  { id: 3, name: 'Emily Davis', role: 'Account Executive', startDate: 'Jan 15, 2026', progress: 15, status: 'Just Started' },
-];
+  useEffect(() => {
+    loadMetrics();
+  }, []);
 
-const tasks = [
-  { id: 1, task: 'Complete I-9 Form', assignee: 'Sarah Johnson', dueDate: 'Jan 20', status: 'pending' },
-  { id: 2, task: 'IT Equipment Setup', assignee: 'Michael Chen', dueDate: 'Jan 18', status: 'in_progress' },
-  { id: 3, task: 'NMLS Registration', assignee: 'Sarah Johnson', dueDate: 'Jan 25', status: 'pending' },
-  { id: 4, task: 'Welcome Meeting', assignee: 'Emily Davis', dueDate: 'Jan 16', status: 'completed' },
-];
+  const loadMetrics = async () => {
+    try {
+      setLoading(true);
+      const [
+        activeOnboardings,
+        dueThisWeek,
+        overdue,
+        pendingApprovals,
+        newApplications,
+        teamVelocity,
+      ] = await Promise.all([
+        metrics.getActiveOnboardingsCount(),
+        metrics.getTasksDueThisWeekCount(),
+        metrics.getOverdueTasksCount(),
+        metrics.getPendingApprovalsCount(),
+        metrics.getNewApplicationsCount(),
+        metrics.getTeamVelocity(),
+      ]);
 
-export default function TalentFlowPage() {
+      setDashboardMetrics({
+        activeOnboardings,
+        dueThisWeek,
+        overdue,
+        pendingApprovals,
+        newApplications,
+        teamVelocity,
+      });
+    } catch (error) {
+      console.error("Failed to load metrics:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="p-8 space-y-8">
+        <Skeleton className="h-10 w-64" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-48" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const metricCards = [
+    {
+      title: "Active Onboardings",
+      value: dashboardMetrics.activeOnboardings,
+      subtitle: "In progress",
+      icon: Users,
+      color: "bg-blue-50 text-blue-600",
+      borderColor: "border-blue-200",
+      link: "/talentflow/onboardings",
+      linkText: "View Pipeline",
+    },
+    {
+      title: "Due This Week",
+      value: dashboardMetrics.dueThisWeek,
+      subtitle: "Tasks coming up",
+      icon: Calendar,
+      color: "bg-yellow-50 text-yellow-600",
+      borderColor: "border-yellow-200",
+      link: "/talentflow/tasks?filter=due-this-week",
+      linkText: "View Tasks",
+    },
+    {
+      title: "Overdue",
+      value: dashboardMetrics.overdue,
+      subtitle: "Needs immediate attention",
+      icon: AlertTriangle,
+      color: "bg-red-50 text-red-600",
+      borderColor: "border-red-200",
+      link: "/talentflow/tasks?filter=overdue",
+      linkText: "Fix Now",
+    },
+    {
+      title: "Pending Approvals",
+      value: dashboardMetrics.pendingApprovals,
+      subtitle: "Waiting for your review",
+      icon: ClipboardCheck,
+      color: "bg-purple-50 text-purple-600",
+      borderColor: "border-purple-200",
+      link: "/talentflow/approvals",
+      linkText: "Review",
+    },
+    {
+      title: "New Applications",
+      value: dashboardMetrics.newApplications,
+      subtitle: "Need review",
+      icon: FileText,
+      color: "bg-cyan-50 text-cyan-600",
+      borderColor: "border-cyan-200",
+      link: "/talentflow/applications",
+      linkText: "View Applications",
+    },
+    {
+      title: "Team Velocity",
+      value: `${dashboardMetrics.teamVelocity}%`,
+      subtitle: "Tasks completed on time",
+      icon: Zap,
+      color: "bg-green-50 text-green-600",
+      borderColor: "border-green-200",
+      link: "/talentflow/tasks",
+      linkText: "View All Tasks",
+    },
+  ];
+
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="TalentFlow"
-        description="Employee onboarding and lifecycle management"
-        icon={UserPlus}
-        iconColor="text-cyan-600"
-        iconBgColor="bg-cyan-50"
-        badge="Coming Soon"
-      />
-
-      {/* Stats */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {onboardingStats.map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="flex items-center gap-4 p-4">
-              <div className={`p-2 rounded-lg ${stat.bgColor}`}>
-                <stat.icon className={`h-5 w-5 ${stat.color}`} />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stat.value}</p>
-                <p className="text-sm text-muted-foreground">{stat.label}</p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+    <div className="p-8 space-y-8">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">TalentFlow</h1>
+        <p className="text-gray-500 mt-1">
+          Employee onboarding and task management
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Active Onboardings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Active Onboardings
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {activeOnboardings.map((person) => (
-              <div key={person.id} className="p-4 rounded-lg border">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <p className="font-medium">{person.name}</p>
-                    <p className="text-sm text-muted-foreground">{person.role}</p>
+      {/* Metric Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {metricCards.map((card, index) => {
+          const Icon = card.icon;
+          return (
+            <Card
+              key={index}
+              className={`border-2 ${card.borderColor} hover:shadow-lg transition-shadow`}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div
+                    className={`p-3 rounded-xl ${card.color}`}
+                  >
+                    <Icon className="w-6 h-6" />
                   </div>
-                  <Badge variant="secondary">{person.status}</Badge>
                 </div>
-                <div className="space-y-1">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Progress</span>
-                    <span className="font-medium">{person.progress}%</span>
-                  </div>
-                  <Progress value={person.progress} className="h-2" />
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">Started: {person.startDate}</p>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
 
-        {/* Task Queue */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5" />
-              Onboarding Tasks
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {tasks.map((task) => (
-                <div
-                  key={task.id}
-                  className={`flex items-center justify-between p-3 rounded-lg border ${
-                    task.status === 'completed' ? 'bg-green-50 border-green-200' : ''
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`h-2 w-2 rounded-full ${
-                        task.status === 'completed'
-                          ? 'bg-green-500'
-                          : task.status === 'in_progress'
-                          ? 'bg-blue-500'
-                          : 'bg-gray-300'
-                      }`}
-                    />
-                    <div>
-                      <p className={`text-sm font-medium ${task.status === 'completed' ? 'line-through text-muted-foreground' : ''}`}>
-                        {task.task}
-                      </p>
-                      <p className="text-xs text-muted-foreground">{task.assignee}</p>
-                    </div>
-                  </div>
-                  <span className="text-xs text-muted-foreground">{task.dueDate}</span>
+                <div className="space-y-1 mb-4">
+                  <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+                    {card.title}
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {card.value}
+                  </p>
+                  <p className="text-sm text-gray-500">{card.subtitle}</p>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+
+                <Link href={card.link}>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-between group"
+                  >
+                    <span className="text-sm font-medium">{card.linkText}</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Quick Actions */}
+      <div className="mt-8">
+        <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Link href="/talentflow/onboardings/new">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-6">
+                <h3 className="font-semibold mb-2">Start New Onboarding</h3>
+                <p className="text-sm text-gray-500">
+                  Create an onboarding for a new hire
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/talentflow/playbooks">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-6">
+                <h3 className="font-semibold mb-2">Manage Playbooks</h3>
+                <p className="text-sm text-gray-500">
+                  Edit onboarding templates and workflows
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/directory">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-6">
+                <h3 className="font-semibold mb-2">Employee Database</h3>
+                <p className="text-sm text-gray-500">
+                  View and manage all employees
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+        </div>
       </div>
     </div>
   );
