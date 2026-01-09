@@ -3,7 +3,10 @@
  * All Supabase queries for TalentFlow entities
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase as supabaseClient } from '@/lib/supabase';
+
+// Cast to any to avoid TypeScript errors with dynamic table schemas
+const supabase = supabaseClient as any;
 
 // =====================================================
 // TYPES
@@ -122,14 +125,12 @@ export type Playbook = {
 export type Onboarding = {
   id: string;
   employee_id: string;
-  playbook_id?: string;
-  start_date: string;
-  expected_end_date?: string;
-  actual_end_date?: string;
-  status: 'pending' | 'on-track' | 'at-risk' | 'completed';
-  progress: number;
-  current_stage?: string;
-  stage_end_date?: string;
+  playbook_id: string;
+  status: 'not-started' | 'in-progress' | 'on-hold' | 'completed';
+  start_date?: string;
+  target_completion_date?: string;
+  actual_completion_date?: string;
+  progress_percentage: number;
   notes?: string;
   created_at: string;
   updated_at: string;
@@ -291,7 +292,7 @@ export const permissions = {
   },
 
   async check(email: string, appSlug: string, requiredLevel: 'view' | 'edit' | 'admin') {
-    const { data, error } = await supabase
+    const { data, error} = await supabase
       .rpc('has_permission', {
         user_email_param: email,
         app_slug_param: appSlug,
