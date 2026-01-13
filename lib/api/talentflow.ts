@@ -117,6 +117,7 @@ export type Playbook = {
   description?: string;
   owner?: string;
   status: 'draft' | 'active' | 'archived';
+  estimated_days?: number;
   milestones: Milestone[];
   created_at: string;
   updated_at: string;

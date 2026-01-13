@@ -50,6 +50,14 @@ export const navigation: NavItem[] = [
     name: 'TalentFlow',
     href: '/talentflow',
     icon: UserPlus,
+    children: [
+      { name: 'Dashboard', href: '/talentflow' },
+      { name: 'All Tasks', href: '/talentflow/tasks' },
+      { name: 'Onboardings', href: '/talentflow/onboardings' },
+      { name: 'Playbooks', href: '/talentflow/playbooks' },
+      { name: 'Applications', href: '/talentflow/applications' },
+      { name: 'My Portal', href: '/talentflow/portal' },
+    ],
   },
   {
     name: 'CRM',
