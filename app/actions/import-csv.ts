@@ -309,7 +309,7 @@ export async function importPipelineCSV(csvContent: string): Promise<ImportResul
     const { error: logCompleteError } = await supabase
       .from('sync_logs')
       .insert({
-        status: errors.length > 0 ? 'completed' : 'completed',
+        status: errors.length > 0 ? 'failed' : 'completed',
         sync_type: 'csv',
         records_fetched: records.length,
         records_upserted: importedRows + updatedRows,
